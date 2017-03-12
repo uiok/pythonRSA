@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example</title>
+    <link type="text/css" rel="stylesheet" href="static/stylesheets/bootstrap.min.css">
+    <script src="static/javascripts/jquery.min.js"></script>
+    <script src="static/javascripts/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <form>
+        <p>{{error}}</p>
+        <div class="form-group">
+            <label>公鑰</label>
+            <input type="text" class="form-control" name="publicKey" id="publicKey" value="{{publicKey}}">
+        </div>
+        <div class="form-group">
+            <label>私鑰</label>
+            <input type="text" class="form-control" name="privateKey" id="privateKey" value="{{privateKey}}">
+        </div>
+        <div class="form-group">
+            <label>加密內容</label>
+            <textarea id="encript"></textarea>
+        </div>
+        <div class="form-group">
+            <label>解密內容</label>
+            <textarea id="descript"></textarea>
+        </div>
+    </form>
+</div>
+<script>
+
+$("#asd").on('click',function(){
+
+        newObj ={
+            'publicKey':$("#publicKey").val(),
+            'privateKey':$("#privateKey").val(),
+            'encript':$("#encript").val()
+        }
+        $.ajax({
+            url: '/process',
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(newObj)
+            contentType: 'application/json',
+            success:function(data){
+            },
+            error:function(){}
+        })
+    })
+
+
+</script>
+</body>
+</html>
+
