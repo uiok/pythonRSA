@@ -51,6 +51,7 @@
         </div>
     </form>
     <button id="asd">加密</button>
+    <button id="zxc">解密</button>
 </div>
 <script>
 
@@ -62,22 +63,44 @@ $("#asd").on('click',function(){
             'pure':$("#pure").val()
         }
         $.ajax({
-            url: '/process',
+            url: '/process/ecrypt',
             type: 'POST',
             dataType: 'json',
             data:JSON.stringify(newObj),
             contentType: 'application/json',
             success:function(data){
             debugger;
-                $('#content').text(data.content)
-                $('#rsaSignture').text(data.rsaSignture)
-                $('#rsaStringForaes').text(data.rsaStringForaes)
+                $('#content').val(data.content)
+                $('#rsaSignture').val(data.rsaSignture)
+                $('#rsaStringForaes').val(data.rsaStringForaes)
 
             },
             error:function(){}
         })
     })
+$("#zxc").on('click',function(){
 
+        newObj ={
+            'publicKeyA':$("#publicKeyA").val(),
+            'privateKeyB':$("#privateKeyB").val(),
+            'content':$("#content").val(),
+            'rsaSignture':$("#rsaSignture").val(),
+            'rsaStringForaes':$("#rsaStringForaes").val(),
+        }
+        $.ajax({
+            url: '/process/decrypt',
+            type: 'POST',
+            dataType: 'json',
+            data:JSON.stringify(newObj),
+            contentType: 'application/json',
+            success:function(data){
+            debugger;
+            $('#descript').val(data.descript)
+
+            },
+            error:function(){}
+        })
+    })
 
 
 

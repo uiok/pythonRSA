@@ -14,14 +14,14 @@ class SecureManager:
         rasTool = RSATool()
         aecTool = AESCipher()
         # 設私鑰
-        aesDecString = rasTool.Decrypt(SystemConfig.privateKey, aesString)
+        aesDecString = rasTool.Decrypt(privateKeyB, aesString)
         # aes內文
         targetData = aecTool.decrypt(encString,aesDecString)
         # 金公鑰
-        status = rasTool.VerifyDigitalSignture(self.publicKey , targetData, signture)
+        status = rasTool.VerifyDigitalSignture(publicKeyA , targetData, signture)
 
         if status:
-            return True, json.loads(json.loads(targetData)['arg'])
+            return True, json.loads(targetData)['arg']
         else:
             return False
 

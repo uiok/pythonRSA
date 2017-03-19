@@ -20,7 +20,7 @@ def FirstProcess():
     return render_template('/form.html', **locals())
 
 
-@app.route('/process', methods=['POST'])
+@app.route('/process/ecrypt', methods=['POST'])
 def SecondProcess():
 
     try:
@@ -38,6 +38,23 @@ def SecondProcess():
         return None
 
 
+@app.route('/process/decrypt', methods=['POST'])
+def ThirdProcess():
+
+    try:
+        publicKeyA =  request.json.get('publicKeyA')
+        privateKeyB =  request.json.get('privateKeyB')
+        content = request.json.get('content')
+        rsaSignture = request.json.get('rsaSignture')
+        rsaStringForaes = request.json.get('rsaStringForaes')
+
+        status,targetData= SecureManager().ReceiverProcess(privateKeyB,publicKeyA,content,rsaSignture,rsaStringForaes)
+
+        return json.dumps({
+            'descript':targetData
+        })
+    except Exception as e:
+        return None
 
 
 if __name__ == '__main__':
