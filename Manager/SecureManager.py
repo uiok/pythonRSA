@@ -13,11 +13,11 @@ class SecureManager:
 
         rasTool = RSATool()
         aecTool = AESCipher()
-        # 設私鑰
+
         aesDecString = rasTool.Decrypt(privateKeyB, aesString)
-        # aes內文
+
         targetData = aecTool.decrypt(encString,aesDecString)
-        # 金公鑰
+
         status = rasTool.VerifyDigitalSignture(publicKeyA , targetData, signture)
 
         if status:
@@ -35,9 +35,9 @@ class SecureManager:
         }
 
         targetData = aecTool.encrypt(json.dumps(returnObj), randomeAESKey)
-        # 設公鑰
+
         rsaStringForaes = rasTool.Encrypt(publicKeyB,randomeAESKey)
-        #金私鑰
+
         rsaSignture = rasTool.DigitalSignture(privateKeyA, json.dumps(returnObj))
 
         return str(targetData, 'utf-8'), rsaSignture, rsaStringForaes

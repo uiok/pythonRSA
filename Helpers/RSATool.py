@@ -17,22 +17,6 @@ class RSATool:
         enc_data = RSAObj.encrypt(targetDate.encode('utf-8'), 32)
         return str(base64.b64encode(enc_data[0]), 'utf-8')
 
-
-        # public_key = private_key.publickey()
-        # pp = public_key.exportKey()
-        # private_key = RSA.generate(2048)
-        # public_key = private_key.publickey()
-        # pp = public_key.exportKey()
-        # pv =   RSA.importKey(private_key.exportKey())
-        # enc_data = public_key.encrypt('encrypt this message'.encode('utf-8'), 32)
-        # pv.decrypt(enc_data)
-        #轉字串(進資料庫,丟給平台)
-        # str(base64.b64encode(public_key.exportKey()), 'utf-8')
-        # 解回來(取出來再轉回byte)
-        # base64.b64decode(bytes(str(base64.b64encode(public_key.exportKey()), 'utf-8'), 'utf-8'))
-        # return str(base64.b64encode(enc_data[0]), 'utf-8')
-
-
     def Decrypt(self,privateKey,targetData):
         privateKey_b = base64.b64decode(bytes(privateKey, 'utf-8'))
         RSAObj = RSA.importKey(privateKey_b)
@@ -40,11 +24,11 @@ class RSATool:
         return str(dec_data, 'utf-8')
 
     def DigitalSignture(self,privateKey,targetData):
-        # RSA物件
+
         privateKey_b = base64.b64decode(bytes(privateKey, 'utf-8'))
         RSAObj = RSA.importKey(privateKey_b)
 
-        # 簽章物件
+
         targetData_encode = targetData.encode('utf-8')
         hashObj = SHA256.new(targetData_encode)
         signer = PKCS1_v1_5.new(RSAObj)
@@ -53,11 +37,11 @@ class RSATool:
         return str(base64.b64encode(signature), 'utf-8')
 
     def VerifyDigitalSignture(self,publicKey,targetData,signature):
-        # RSA物件
+
         publicKey_byte = base64.b64decode(bytes(publicKey,'utf-8'))
         RSAObj = RSA.importKey(publicKey_byte)
 
-        # 簽章物件
+
         targetData_encode = targetData.encode('utf-8')
         hashObj = SHA256.new(targetData_encode)
         signature_byte = base64.b64decode(signature)
