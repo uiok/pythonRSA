@@ -8,7 +8,7 @@ class RSATool:
 
     def Generator(self):
         random_generator = Random.new().read
-        private_key = RSA.generate(1024, random_generator)
+        private_key = RSA.generate(2048, random_generator)
         return  str(base64.b64encode(private_key.publickey().exportKey()), 'utf-8'), str(base64.b64encode(private_key.exportKey()), 'utf-8')
 
     def Encrypt(self,publicKey,targetDate):
@@ -20,7 +20,7 @@ class RSATool:
 
         # public_key = private_key.publickey()
         # pp = public_key.exportKey()
-        # private_key = RSA.generate(1024)
+        # private_key = RSA.generate(2048)
         # public_key = private_key.publickey()
         # pp = public_key.exportKey()
         # pv =   RSA.importKey(private_key.exportKey())

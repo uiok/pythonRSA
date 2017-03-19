@@ -7,28 +7,39 @@ import json, SystemConfig
 
 class SecureManager:
 
-    def __init__(self,plateFormCode):
-        plateFormAccount = PaymentGatwayManager.GetPlateFormAccount(plateFormCode)
-        self.AESCipher = AESCipher(plateFormAccount['AES'])
-        self.privateKey = plateFormAccount['RSA']['privateKey']
-        self.publicKey = plateFormAccount['RSA']['privateKey']
 
-    def ReceiverProcess(self,encString):
-        origionalJsonObj = json.dumps(RSATool.Decrypt(SystemConfig.PaymentGatwayKey['RSA']['privateKey'], encString))
-        targetData = self.AESCipher.decrypt(origionalJsonObj['args'])
-        status = RSATool.VerifyDigitalSignture(self.privateKey , targetData, origionalJsonObj['checkValue'])
+
+    def ReceiverProcess(self,privateKeyB,publicKeyA,encString,signture,aesString):
+
+        rasTool = RSATool()
+        aecTool = AESCipher()
+        # 設私鑰
+        aesDecString = rasTool.Decrypt(SystemConfig.privateKey, aesString)
+        # aes內文
+        targetData = aecTool.decrypt(encString,aesDecString)
+        # 金公鑰
+        status = rasTool.VerifyDigitalSignture(self.publicKey , targetData, signture)
+
         if status:
-            return True, json.dumps(targetData)
+            return True, json.loads(json.loads(targetData)['arg'])
         else:
             return False
 
-    def ReturnProcess(self,returnString):
+    def ReturnProcess(self,privateKeyA,publicKeyB,returnString):
 
-        aesString = self.AESCipher.decrypt(returnString)
-        rsaSignture = RSATool.DigitalSignture(SystemConfig.PaymentGatwayKey['RSA']['privateKey'], returnString)
-
+        rasTool = RSATool()
+        aecTool = AESCipher()
+        randomeAESKey = aecTool.GenerateKey()
         returnObj = {
-            'arg': aesString,
-            'checkValue': rsaSignture
+            'arg': returnString
         }
-        return RSATool.Encrypt(self.privateKey , json.dumps(returnObj))
+
+        targetData = aecTool.encrypt(json.dumps(returnObj), randomeAESKey)
+        # 設公鑰
+        rsaStringForaes = rasTool.Encrypt(publicKeyB,randomeAESKey)
+        #金私鑰
+        rsaSignture = rasTool.DigitalSignture(privateKeyA, json.dumps(returnObj))
+
+        return str(targetData, 'utf-8'), rsaSignture, rsaStringForaes
+
+
